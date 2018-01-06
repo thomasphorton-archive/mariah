@@ -1,0 +1,11 @@
+module.exports = {
+  aws: {
+    region: 'us-west-2'
+  },
+  iot: {
+    keyPath: './certs/xxx.private.key',
+    certPath: './certs/xxx.cert.pem',
+    caPath: './certs/root-CA.crt',
+    host: 'xxx'
+  }
+};
