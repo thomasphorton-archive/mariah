@@ -1,0 +1,23 @@
+{
+  "name": "mariah",
+  "version": "1.0.0",
+  "description": "1. Start the GPS daemon: `sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock`\r 1. Test GPS fix: `cgps -s`",
+  "main": "app.js",
+  "dependencies": {
+    "node-gpsd": "^0.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasphorton/mariah.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomasphorton/mariah/issues"
+  },
+  "homepage": "https://github.com/thomasphorton/mariah#readme"
+}
