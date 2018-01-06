@@ -44,8 +44,8 @@ daemon.start(() => {
     listener.watch();
 
     listener.on('TPV', (e) => {
-      console.log('event:', e);
-    
+      e.trip_id = 'trip_1';
+      console.log('event:', e);    
       device.publish('gps', JSON.stringify(e));
 
     });
