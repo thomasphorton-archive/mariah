@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "aws-iot-device-sdk": "^2.2.0",
+    "aws-sdk": "^2.179.0",
     "node-gpsd": "^0.3.0"
   },
   "devDependencies": {},

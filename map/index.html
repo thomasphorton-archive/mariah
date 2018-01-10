@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.42.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.42.0/mapbox-gl.css' rel='stylesheet' />
+  </head>
+  <body>
+    <div id='map' style='width: 1600px; height: 1200px;'></div>
+    <script>
+    mapboxgl.accessToken = '';
+      var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/satellite-v9'
+    });
+    map.on('load', function () {
+
+        map.addLayer();
+    });
+    </script>
+  </body>
+</html>
