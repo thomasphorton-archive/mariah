@@ -6,7 +6,8 @@
   "dependencies": {
     "aws-iot-device-sdk": "^2.2.0",
     "aws-sdk": "^2.179.0",
-    "node-gpsd": "^0.3.0"
+    "node-gpsd": "^0.3.0",
+    "winston": "^3.0.0-rc1"
   },
   "devDependencies": {},
   "scripts": {

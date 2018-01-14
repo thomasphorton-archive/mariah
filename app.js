@@ -2,6 +2,22 @@ const config = require('./config.js');
 
 const gpsd = require('node-gpsd');
 const deviceModule = require('aws-iot-device-sdk').device;
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
+}
 
 const daemon = new gpsd.Daemon({
   program: 'gpsd',
@@ -21,7 +37,7 @@ const listener = new gpsd.Listener({
   hostname: 'localhost',
   logger: {
     info: function() {},
-    warn: console.lwarn,
+    warn: console.warn,
     error: console.error
   },
   parse: true
@@ -36,21 +52,21 @@ const device = deviceModule({
 });
 
 let mariah = {
-  trip_id: 'trip_1';
+  trip_id: 'trip_1'
 }
 
 daemon.start(() => {
-  console.log('GPS Daemon started');
+  logger.info('GPS Daemon started');
   
   listener.connect(() => {
-    console.log('GPS Listener connected');
+    logger.info('GPS Listener connected');
   
     listener.watch();
 
     listener.on('TPV', (e) => {
 
       // Update local object on new GPS data.
-      console.log('event:', e);
+      logger.info('GPS event:', e);
       mariah.time = event.time;
       mariah.alt = event.alt;
       mariah.lat = event.lat;
@@ -63,5 +79,7 @@ daemon.start(() => {
 setInterval(publishToIot, config.iot.interval * 1000);
 
 function publishToIot() {
-  device.publish('gps', JSON.stringify(mariah));
+  let event = JSON.stringify(mariah);
+  logger.info(event);
+  device.publish('gps', event);
 }
