@@ -35,6 +35,10 @@ const device = deviceModule({
   host: config.iot.host
 });
 
+let mariah = {
+  trip_id: 'trip_1';
+}
+
 daemon.start(() => {
   console.log('GPS Daemon started');
   
@@ -44,11 +48,20 @@ daemon.start(() => {
     listener.watch();
 
     listener.on('TPV', (e) => {
-      e.trip_id = 'trip_1';
-      console.log('event:', e);    
-      device.publish('gps', JSON.stringify(e));
 
+      // Update local object on new GPS data.
+      console.log('event:', e);
+      mariah.time = event.time;
+      mariah.alt = event.alt;
+      mariah.lat = event.lat;
+      mariah.lon = event.lon;
     });
-
   });
 });
+
+// Publish to IoT service on an interval
+setInterval(publishToIot, config.iot.interval * 1000);
+
+function publishToIot() {
+  device.publish('gps', JSON.stringify(mariah));
+}
