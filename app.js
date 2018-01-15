@@ -3,6 +3,7 @@ const config = require('./config.js');
 const gpsd = require('node-gpsd');
 const deviceModule = require('aws-iot-device-sdk').device;
 const winston = require('winston');
+const Mariah = require('./mariah');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -51,14 +52,13 @@ const device = deviceModule({
   host: config.iot.host
 });
 
-let mariah = {
-  trip_id: 'trip_1'
-}
+let mariah = new Mariah('trip_2');
 
 daemon.start(() => {
   logger.info('GPS Daemon started');
   
   listener.connect(() => {
+    console.log(Maria)
     logger.info('GPS Listener connected');
   
     listener.watch();
@@ -67,10 +67,9 @@ daemon.start(() => {
 
       // Update local object on new GPS data.
       logger.info('GPS event:', e);
-      mariah.time = event.time;
-      mariah.alt = event.alt;
-      mariah.lat = event.lat;
-      mariah.lon = event.lon;
+
+      mariah.updateLocation(e.lat, e.lon, e.alt);
+      mariah.updateTime(e.time);
     });
   });
 });
@@ -83,3 +82,5 @@ function publishToIot() {
   logger.info(event);
   device.publish('gps', event);
 }
+
+
