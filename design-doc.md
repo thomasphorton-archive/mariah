@@ -9,13 +9,19 @@ future versions will include a cloud-hosted application
 * draw diagram
 
 ## Modules
+
+### System Level
 * gather from various sensors
 	* GPS (in progress)
 	* Temp/Humidity (in progress)
 
+* update state object
+
 * record in a local DB
 	* run dynamodb locally
+	* polls state object
 
+### Client Level
 * display data on local application
 	* node/express for api
 
