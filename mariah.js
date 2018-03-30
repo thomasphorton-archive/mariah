@@ -1,4 +1,4 @@
-function Mariah(id) {
+var Mariah = function(id) {
 
   let trip_id = id;
   let time = new Date().getTime();
@@ -12,8 +12,6 @@ function Mariah(id) {
     location.x = x;
     location.y = y;
     location.z = z;
-
-    console.log('location updated:', location);
   }
 
   var getLocation = function() {
