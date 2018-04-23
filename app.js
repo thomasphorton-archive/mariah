@@ -52,7 +52,7 @@ const device = deviceModule({
 });
 
 let mariah = {
-  trip_id: 'trip_1'
+  trip_id: 'whistler'
 }
 
 daemon.start(() => {
@@ -67,10 +67,10 @@ daemon.start(() => {
 
       // Update local object on new GPS data.
       logger.info('GPS event:', e);
-      mariah.time = event.time;
-      mariah.alt = event.alt;
-      mariah.lat = event.lat;
-      mariah.lon = event.lon;
+      mariah.time = e.time;
+      mariah.alt = e.alt;
+      mariah.lat = e.lat;
+      mariah.lon = e.lon;
     });
   });
 });
@@ -80,6 +80,7 @@ setInterval(publishToIot, config.iot.interval * 1000);
 
 function publishToIot() {
   let event = JSON.stringify(mariah);
+  logger.info('publishing to IoT');
   logger.info(event);
   device.publish('gps', event);
 }
