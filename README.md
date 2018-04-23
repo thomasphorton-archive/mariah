@@ -1,4 +1,9 @@
 # Mariah
+## What is it?
+mariah is a thing that sits on your boat and reads data from sensors. it runs a local application that displays the data in interesting ways.
+
+future versions will include a cloud-hosted application
+
 ## Hardware
 1. [Raspberry Pi](http://amzn.to/2CZ7Lzy)
 1. [Adafruit Ultimate GPS Breakout](http://amzn.to/2CuXCcF)
@@ -12,6 +17,7 @@
 1. `npm install`
 1. `node app`
 
+## Cloud Setup
 ### IoT Setup
 1. Generate an IoT cert with the one-click certification creation.
 1. Move certs to `/certs`
