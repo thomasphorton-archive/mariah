@@ -2,3 +2,4 @@ node_modules/
 certs/
 config.js
 *.log
+gpsd-fake/tmp.json

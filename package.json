@@ -11,10 +11,12 @@
     "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
+    "gpsd-fake": "^1.0.1",
     "mocha": "^4.1.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "gpsd": "gpsd-fake --config-file ./gpsd-fake/config.json --tmp-file ./gpsd-fake/tmp.json"
   },
   "repository": {
     "type": "git",

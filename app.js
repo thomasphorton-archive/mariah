@@ -20,19 +20,6 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-const daemon = new gpsd.Daemon({
-  program: 'gpsd',
-  device: '/dev/ttyUSB0',
-  port: 2947,
-  pid: '/tmp/gpsd.pid',
-  readOnly: false,
-  logger: {
-    info: function() {},
-    warn: console.warn,
-    error: console.error
-  }
-});
-
 const listener = new gpsd.Listener({
   port: 2947,
   hostname: 'localhost',
@@ -54,23 +41,18 @@ const device = deviceModule({
 
 let mariah = new Mariah('trip_2');
 
-daemon.start(() => {
-  logger.info('GPS Daemon started');
-  
-  listener.connect(() => {
-    console.log(Maria)
-    logger.info('GPS Listener connected');
-  
-    listener.watch();
+listener.connect(() => {
+  logger.info('GPS Listener connected');
 
-    listener.on('TPV', (e) => {
+  listener.watch();
 
-      // Update local object on new GPS data.
-      logger.info('GPS event:', e);
+  listener.on('TPV', (e) => {
 
-      mariah.updateLocation(e.lat, e.lon, e.alt);
-      mariah.updateTime(e.time);
-    });
+    // Update local object on new GPS data.
+    logger.info('GPS event:', e);
+
+    mariah.updateLocation(e.lat, e.lon, e.alt);
+    mariah.updateTime(e.time);
   });
 });
 
@@ -83,5 +65,3 @@ function publishToIot() {
   logger.info(event);
   device.publish('gps', event);
 }
-
-
