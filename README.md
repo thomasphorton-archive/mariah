@@ -31,8 +31,11 @@ future versions will include a cloud-hosted application
 1. Create a rule
 	* Attribute: `*`
 	* Topic filter: `gps`
-	* Conditon: leave blank
+	* Condition: leave blank
 1. Add action (Store messages in Amazon S3 bucket)
 	* S3 bucket: use the bucket created earlier
 	* Key: `${topic()}/${timestamp()}`
 	* Create a new role to grant IoT access
+
+## Testing
+This library relies on connection to a GPSD server to receive data. Use the `gpsd-fake` library to create a local GPSD server. By default, it should be broadcasting on the correct ports and there will be no additional configuration needed.
