@@ -55,11 +55,25 @@ listener.connect(() => {
 
     // Update local object on new GPS data.
     logger.info('GPS event:', e);
-    state.lat = e.lat.toFixed(5);
-    state.lon = e.lon.toFixed(5);
+
+    if (e.lat != undefined) {
+      state.lat = e.lat.toFixed(5);
+    }
+
+    if (e.lon != undefined) {
+      state.lon = e.lon.toFixed(5);
+    }
+
     state.alt = e.alt;
-    state.track = e.track.toFixed(2);
-    state.speed = e.speed.toFixed(2);
+
+    if (e.track != undefined) {
+      state.track = e.track.toFixed(2);
+    }
+
+    if (e.speed != undefined) {
+      state.speed = e.speed.toFixed(2);
+    }
+
     state.ts = new Date().getTime();
   });
 });
