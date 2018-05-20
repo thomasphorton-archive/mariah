@@ -1,9 +1,8 @@
 const config = require('./config.js');
-
+const uuidv4 = require('uuid/v4');
 const gpsd = require('node-gpsd');
 const deviceModule = require('aws-iot-device-sdk').device;
 const winston = require('winston');
-const Mariah = require('./mariah');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -39,7 +38,13 @@ const device = deviceModule({
   host: config.iot.host
 });
 
-let mariah = new Mariah('trip_2');
+let state = {
+  tripId: uuidv4(),
+  ts: new Date().getTime()
+};
+
+// initialize trip in database
+device.publish('trip-start', JSON.stringify(state));
 
 listener.connect(() => {
   logger.info('GPS Listener connected');
@@ -50,9 +55,12 @@ listener.connect(() => {
 
     // Update local object on new GPS data.
     logger.info('GPS event:', e);
-
-    mariah.updateLocation(e.lat, e.lon, e.alt);
-    mariah.updateTime(e.time);
+    state.lat = e.lat.toFixed(5);
+    state.lon = e.lon.toFixed(5);
+    state.alt = e.alt;
+    state.track = e.track.toFixed(2);
+    state.speed = e.speed.toFixed(2);
+    state.ts = new Date().getTime();
   });
 });
 
@@ -60,8 +68,9 @@ listener.connect(() => {
 setInterval(publishToIot, config.iot.interval * 1000);
 
 function publishToIot() {
-  let event = JSON.stringify(mariah);
+
+  let event = JSON.stringify(state);
   logger.info('publishing to IoT');
   logger.info(event);
-  device.publish('gps', event);
+  device.publish('trip-data', event);
 }
