@@ -19,16 +19,54 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-const listener = new gpsd.Listener({
-  port: 2947,
-  hostname: 'localhost',
-  logger: {
-    info: function() {},
-    warn: console.warn,
-    error: console.error
-  },
-  parse: true
-});
+try {
+  const listener = new gpsd.Listener({
+    port: 2947,
+    hostname: 'localhost',
+    logger: {
+      info: function() {},
+      warn: console.warn,
+      error: console.error
+    },
+    parse: true
+  });
+
+  listener.connect(() => {
+    logger.info('GPS Listener connected');
+
+    listener.watch();
+
+    listener.on('TPV', (e) => {
+
+      // Update local object on new GPS data.
+      logger.info('GPS event:', e);
+
+      if (e.lat != undefined) {
+        state.lat = e.lat.toFixed(5);
+      }
+
+      if (e.lon != undefined) {
+        state.lon = e.lon.toFixed(5);
+      }
+
+      state.alt = e.alt;
+
+      if (e.track != undefined) {
+        state.track = e.track.toFixed(2);
+      }
+
+      if (e.speed != undefined) {
+        state.speed = e.speed.toFixed(2);
+      }
+
+      state.ts = new Date().getTime();
+    });
+  });
+}
+catch (err) {
+  logger.error('Error starting GPS listener:');
+  logger.error(err);
+}
 
 const device = deviceModule({
   keyPath: config.iot.keyPath,
@@ -44,39 +82,8 @@ let state = {
 };
 
 // initialize trip in database
-device.publish('trip-start', JSON.stringify(state));
-
-listener.connect(() => {
-  logger.info('GPS Listener connected');
-
-  listener.watch();
-
-  listener.on('TPV', (e) => {
-
-    // Update local object on new GPS data.
-    logger.info('GPS event:', e);
-
-    if (e.lat != undefined) {
-      state.lat = e.lat.toFixed(5);
-    }
-
-    if (e.lon != undefined) {
-      state.lon = e.lon.toFixed(5);
-    }
-
-    state.alt = e.alt;
-
-    if (e.track != undefined) {
-      state.track = e.track.toFixed(2);
-    }
-
-    if (e.speed != undefined) {
-      state.speed = e.speed.toFixed(2);
-    }
-
-    state.ts = new Date().getTime();
-  });
-});
+logger.info(`Initializing trip: ${state.tripId}`)
+device.publish(config.iot.topicFilters.tripStart, JSON.stringify(state));
 
 // Publish to IoT service on an interval
 setInterval(publishToIot, config.iot.interval * 1000);
@@ -86,5 +93,5 @@ function publishToIot() {
   let event = JSON.stringify(state);
   logger.info('publishing to IoT');
   logger.info(event);
-  device.publish('trip-data', event);
+  device.publish(config.iot.topicFilters.tripData, event);
 }
