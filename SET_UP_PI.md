@@ -21,6 +21,9 @@ sudo apt install zsh
 # Install Oh-my-Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
+# Install MQTT dependencies
+sudo apt-get install -y mosquitto mosquitto-clients
+
 # Install node 8.x
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs npm node-semver

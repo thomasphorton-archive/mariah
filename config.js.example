@@ -3,10 +3,17 @@ module.exports = {
     region: 'us-west-2'
   },
   iot: {
-  	interval: 15,
     keyPath: './certs/xxx.private.key',
     certPath: './certs/xxx.cert.pem',
     caPath: './certs/root-CA.crt',
-    host: 'xxx'
+    host: 'xxx',
+    interval: 10,
+    topicFilters: {
+      tripStart: 'trip-start-beta',
+      tripData: 'trip-data-beta'
+    }
+  },
+  mqtt: {
+    connectionString: 'mqtt:/localhost:1883'
   }
 };
