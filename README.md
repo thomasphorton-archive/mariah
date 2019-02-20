@@ -50,4 +50,16 @@ collected and emitted to customizable endpoints.
 	* Create a new role to grant IoT access
 
 ## Testing
-This library relies on connection to a GPSD server to receive data. Use the `gpsd-fake` library to create a local GPSD server. By default, it should be broadcasting on the correct ports and there will be no additional configuration needed.
+This library relies on connection to a GPSD server to receive data. Use the `gpsd-fake` library to create a local GPSD server. By default, it should be broadcasting on the correct ports and there will be no additional configuration needed. The GPSD server needs to be running before starting Mariah.
+
+## Mariah
+* Has a connector to each sensor
+	* Clinometer
+	* DHT
+	* GPS
+* Publishes sensor data to MQTT Server
+* Attempts to send data to AWS IoT if possible
+
+## Mariah App
+* Connects to MQTT Server
+* Displays real-time sensor data provided via MQTT
